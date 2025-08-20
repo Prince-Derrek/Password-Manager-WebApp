@@ -37,4 +37,19 @@ public class VaultRepository : IVaultRepository
         _db.Items.Update(item);
         await _db.SaveChangesAsync();
     }
+    public async Task<List<VaultEntity>> GetAllVaultsAsync()
+    => await _db.Vaults.ToListAsync();
+
+    public async Task<VaultEntity?> GetVaultByIdAsync(int id)
+        => await _db.Vaults.FindAsync(id);
+
+    public async Task DeleteVaultAsync(int id)
+    {
+        var vault = await _db.Vaults.FindAsync(id);
+        if (vault != null)
+        {
+            _db.Vaults.Remove(vault);
+            await _db.SaveChangesAsync();
+        }
+    }
 }

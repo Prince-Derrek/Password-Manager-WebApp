@@ -121,4 +121,20 @@ public class VaultService : IVaultService
         await _repo.AddItemAsync(ent);
         return ent.Id;
     }
+    public async Task<List<VaultSummaryDto>> ListVaultsAsync(string sessionToken)
+    {
+        var vaultKey = _sessions.GetKey(sessionToken) ?? throw new UnauthorizedAccessException();
+        var vaults = await _repo.GetAllVaultsAsync();
+        return vaults.Select(v => new VaultSummaryDto(v.Id, v.CreatedAt)).ToList();
+    }
+
+    public async Task DeleteVaultAsync(string sessionToken, int vaultId)
+    {
+        var vaultKey = _sessions.GetKey(sessionToken) ?? throw new UnauthorizedAccessException();
+        var vault = await _repo.GetVaultByIdAsync(vaultId);
+        if (vault == null)
+            throw new KeyNotFoundException("Vault not found");
+
+        await _repo.DeleteVaultAsync(vaultId);
+    }
 }

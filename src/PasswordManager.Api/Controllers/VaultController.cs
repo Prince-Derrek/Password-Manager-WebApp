@@ -56,5 +56,21 @@ namespace PasswordManager.Api.Controllers
             var id = await _vault.CreateItemAsync(token, dto);
             return CreatedAtAction(nameof(GetItem), new { id }, new { id });
         }
+        [HttpGet]
+        public async Task<IActionResult> ListVaults()
+        {
+            var token = GetSessionToken();
+            var vaults = await _vault.ListVaultsAsync(token);
+            return Ok(vaults);
+        }
+
+        // 🔹 New endpoint: delete vault
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteVault(int id)
+        {
+            var token = GetSessionToken();
+            await _vault.DeleteVaultAsync(token, id);
+            return NoContent();
+        }
     }
 }

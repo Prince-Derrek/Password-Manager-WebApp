@@ -10,4 +10,7 @@ public interface IVaultRepository
     Task<List<VaultItemEntity>> GetItemsAsync();
     Task<VaultItemEntity?> GetItemByIdAsync(int id);
     Task UpdateItemAsync(VaultItemEntity item);
+    Task<List<VaultEntity>> GetAllVaultsAsync(); 
+    Task<VaultEntity?> GetVaultByIdAsync(int id); 
+    Task DeleteVaultAsync(int id);
 }

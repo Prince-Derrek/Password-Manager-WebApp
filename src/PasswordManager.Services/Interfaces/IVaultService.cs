@@ -10,4 +10,6 @@ public interface IVaultService
     Task<List<VaultItemSummaryDto>> ListItemsAsync(string sessionToken);
     Task<VaultItemDetailsDto> GetItemAsync(string sessionToken, int id);
     Task<int> CreateItemAsync(string sessionToken, CreateVaultItemDto dto);
+    Task<List<VaultSummaryDto>> ListVaultsAsync(string sessionToken);
+    Task DeleteVaultAsync(string sessionToken, int vaultId);
 }
