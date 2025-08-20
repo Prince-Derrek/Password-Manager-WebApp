@@ -12,7 +12,26 @@ namespace PasswordManager.Api.Controllers
 
         public VaultController(IVaultService vault) => _vault = vault;
 
-        private string GetSessionToken() => Request.Headers["X-Session-Token"].FirstOrDefault() ?? "";
+        private string GetSessionToken() =>
+            Request.Headers["Session-Token"].FirstOrDefault() ?? "";
+
+        [HttpPost("unlock")]
+        public async Task<IActionResult> Unlock([FromBody] string masterPassword)
+        {
+            var token = await _vault.UnlockAsync(masterPassword);
+
+            Response.Headers["Session-Token"] = token;
+
+            return Ok(new { SessionToken = token });
+        }
+
+        [HttpPost("lock")]
+        public async Task<IActionResult> Lock()
+        {
+            var token = GetSessionToken();
+            await _vault.LockAsync(token);
+            return Ok();
+        }
 
         [HttpGet("items")]
         public async Task<IActionResult> ListItems()
