@@ -1,0 +1,6 @@
+﻿*.db
+*.sqlite
+app.db-shm
+app.db-wal
+appsettings.json
+PasswordManager.Api.http
