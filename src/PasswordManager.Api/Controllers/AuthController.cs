@@ -14,14 +14,14 @@ namespace PasswordManager.Api.Controllers
         [HttpPost("init")]
         public async Task<IActionResult> Init([FromBody] InitRequest req)
         {
-            await _vault.InitializeVaultAsync(req.MasterPassword);
+            await _vault.InitializeVaultAsync(req.MasterPassword, req.vaultName);
             return Ok();
         }
 
         [HttpPost("unlock")]
         public async Task<IActionResult> Unlock([FromBody] UnlockRequest req)
         {
-            var token = await _vault.UnlockAsync(req.MasterPassword);
+            var token = await _vault.UnlockAsync(req.MasterPassword, req.vaultName);
             return Ok(new { SessionToken = token });
         }
 

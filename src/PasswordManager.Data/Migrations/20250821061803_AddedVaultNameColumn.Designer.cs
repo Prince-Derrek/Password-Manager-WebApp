@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PasswordManager.Data;
 
@@ -10,9 +11,11 @@ using PasswordManager.Data;
 namespace PasswordManager.Data.Migrations
 {
     [DbContext(typeof(PwmDbContext))]
-    partial class PwmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250821061803_AddedVaultNameColumn")]
+    partial class AddedVaultNameColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");

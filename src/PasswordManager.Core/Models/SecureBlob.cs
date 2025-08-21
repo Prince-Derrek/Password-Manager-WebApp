@@ -10,5 +10,5 @@ public class SecureBlob
 public record CreateVaultItemDto(string Title, string Url, string Username, string? Password);
 public record VaultItemSummaryDto(int Id, string Title, string Url);
 public record VaultItemDetailsDto(int Id, string Title, string Url, string Username, string Password);
-public record VaultSummaryDto(int Id, DateTime CreatedAt);
+public record VaultSummaryDto(int Id, string vaultName, DateTime CreatedAt);
 

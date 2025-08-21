@@ -9,11 +9,13 @@ namespace PasswordManager.Services.Implementations
         {
             public byte[] VaultKey { get; }
             public DateTime Expiry { get; }
+            public int VaultId { get; }
 
-            public SessionEntry(byte[] vaultKey, TimeSpan ttl)
+            public SessionEntry(byte[] vaultKey, TimeSpan ttl, int vaultId)
             {
                 VaultKey = vaultKey;
                 Expiry = DateTime.UtcNow.Add(ttl);
+                VaultId = vaultId;
             }
 
             public bool IsExpired => DateTime.UtcNow > Expiry;
@@ -21,10 +23,10 @@ namespace PasswordManager.Services.Implementations
 
         private readonly ConcurrentDictionary<string, SessionEntry> _sessions = new();
 
-        public string CreateSession(byte[] vaultKey, TimeSpan ttl)
+        public string CreateSession(byte[] vaultKey, TimeSpan ttl, int vaultId)
         {
             var token = Guid.NewGuid().ToString("N"); // unique token
-            var entry = new SessionEntry(vaultKey, ttl);
+            var entry = new SessionEntry(vaultKey, ttl, vaultId);
 
             _sessions[token] = entry;
             return token;
@@ -45,6 +47,18 @@ namespace PasswordManager.Services.Implementations
                 }
 
                 // Expired → cleanup
+                _sessions.TryRemove(sessionToken, out _);
+            }
+
+            return null;
+        }
+        public int? GetVaultId(string sessionToken)
+        {
+            if (_sessions.TryGetValue(sessionToken, out var entry))
+            {
+                if (!entry.IsExpired)
+                    return entry.VaultId;
+
                 _sessions.TryRemove(sessionToken, out _);
             }
 

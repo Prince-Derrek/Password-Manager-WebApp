@@ -4,7 +4,8 @@ namespace PasswordManager.Services.Interfaces;
 
 public interface ISessionManager
 {
-    string CreateSession(byte[] vaultKey, TimeSpan ttl);
+    string CreateSession(byte[] vaultKey, TimeSpan ttl, int vaultId);
     void RemoveSession(string sessionToken);
     byte[]? GetKey(string sessionToken);
+    int? GetVaultId(string sessionToken);
 }

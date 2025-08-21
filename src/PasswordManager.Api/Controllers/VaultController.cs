@@ -15,24 +15,6 @@ namespace PasswordManager.Api.Controllers
         private string GetSessionToken() =>
             Request.Headers["Session-Token"].FirstOrDefault() ?? "";
 
-        [HttpPost("unlock")]
-        public async Task<IActionResult> Unlock([FromBody] string masterPassword)
-        {
-            var token = await _vault.UnlockAsync(masterPassword);
-
-            Response.Headers["Session-Token"] = token;
-
-            return Ok(new { SessionToken = token });
-        }
-
-        [HttpPost("lock")]
-        public async Task<IActionResult> Lock()
-        {
-            var token = GetSessionToken();
-            await _vault.LockAsync(token);
-            return Ok();
-        }
-
         [HttpGet("items")]
         public async Task<IActionResult> ListItems()
         {
@@ -64,7 +46,6 @@ namespace PasswordManager.Api.Controllers
             return Ok(vaults);
         }
 
-        // 🔹 New endpoint: delete vault
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVault(int id)
         {

@@ -13,8 +13,10 @@ public class VaultRepository : IVaultRepository
         _db = db;
     }
 
-    public async Task<VaultEntity?> GetVaultAsync()
-        => await _db.Vaults.FirstOrDefaultAsync();
+    public async Task<VaultEntity?> GetVaultAsync(string vaultName)
+    {
+        return await _db.Vaults.FirstOrDefaultAsync(v => v.VaultName == vaultName);
+    }
 
     public async Task CreateVaultAsync(VaultEntity vault)
     {
@@ -28,10 +30,17 @@ public class VaultRepository : IVaultRepository
         await _db.SaveChangesAsync();
     }
 
-    public async Task<List<VaultItemEntity>> GetItemsAsync()
-        => await _db.Items.ToListAsync();
-    public async Task<VaultItemEntity?> GetItemByIdAsync(int id)
-        => await _db.Items.FindAsync(id);
+    public async Task<List<VaultItemEntity>> GetItemsAsync(int vaultId)
+    {
+       return await _db.Items
+            .Where(i => i.VaultId == vaultId)
+            .ToListAsync();
+    }
+    public async Task<VaultItemEntity?> GetItemByIdAsync(int id, int vaultId)
+    {
+        return await _db.Items
+            .FirstOrDefaultAsync(i => i.Id == id && i.VaultId == vaultId);
+    }
     public async Task UpdateItemAsync(VaultItemEntity item)
     {
         _db.Items.Update(item);

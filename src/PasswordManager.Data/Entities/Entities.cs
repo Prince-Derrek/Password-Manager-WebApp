@@ -8,6 +8,7 @@ public class VaultEntity
 {
     [Key]
     public int Id { get; set; }
+    public string VaultName { get; set; }
     public byte[] EncryptedVaultKey { get; set; } = Array.Empty<byte>();
     public byte[] KdfSalt { get; set; } = Array.Empty<byte>();
     public int KdfIterations { get; set; }

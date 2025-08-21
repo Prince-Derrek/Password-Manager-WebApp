@@ -21,6 +21,7 @@ builder.Services.AddSingleton<ICryptoService, AesGcmCryptoService>();
 builder.Services.AddScoped<IVaultRepository, VaultRepository>();
 builder.Services.AddScoped<IVaultService, VaultService>();
 builder.Services.AddSingleton<ISessionManager, SessionManager>();
+builder.Services.AddScoped<IPasswordGenerator, PasswordGenerator>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
