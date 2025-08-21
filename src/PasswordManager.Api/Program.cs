@@ -6,8 +6,19 @@ using PasswordManager.Crypto.Interfaces;
 using PasswordManager.Data;
 using PasswordManager.Services.Implementations;
 using PasswordManager.Services.Interfaces;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+builder.Host.UseSerilog();
 
 // DB: SQLite file in app folder or configurable via appsettings
 var conn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=app.db";
