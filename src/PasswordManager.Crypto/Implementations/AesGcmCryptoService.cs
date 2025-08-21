@@ -19,12 +19,19 @@ public class AesGcmCryptoService : ICryptoService
 
         return new SecureBlob { Nonce = nonce, Ciphertext = ciphertext, Tag = tag };
     }
-    public byte[] Decrypt(ReadOnlySpan<byte> key, SecureBlob blob, ReadOnlySpan<byte> aad = default)
+    public byte[]? Decrypt(ReadOnlySpan<byte> key, SecureBlob blob, ReadOnlySpan<byte> aad = default)
     {
-        var plain = new byte[blob.Ciphertext.Length];
-        using var aes = new AesGcm(key.ToArray());
-        aes.Decrypt(blob.Nonce, blob.Ciphertext, blob.Tag, plain, aad.ToArray());
-        return plain;
+        try
+        {
+            var plain = new byte[blob.Ciphertext.Length];
+            using var aes = new AesGcm(key.ToArray());
+            aes.Decrypt(blob.Nonce, blob.Ciphertext, blob.Tag, plain, aad.ToArray());
+            return plain;
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
     }
     public SecureBlob EncryptString(ReadOnlySpan<byte> key, string plaintext, ReadOnlySpan<byte> aad = default)
         => Encrypt(key, Encoding.UTF8.GetBytes(plaintext), aad);

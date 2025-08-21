@@ -1,12 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore;
 using PasswordManager.Crypto.Implementations;
 using PasswordManager.Crypto.Interfaces;
 using PasswordManager.Data;
 using PasswordManager.Services.Implementations;
 using PasswordManager.Services.Interfaces;
 using Serilog;
+using Swashbuckle.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,12 @@ builder.Configuration
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
+    .WriteTo.File(
+        $"Logs/api-log-{DateTime.Now:yyyy-MM-dd}.txt",
+        rollingInterval: RollingInterval.Infinite,
+        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
     .CreateLogger();
+
 builder.Host.UseSerilog();
 
 // DB: SQLite file in app folder or configurable via appsettings
