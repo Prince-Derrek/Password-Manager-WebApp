@@ -9,11 +9,17 @@ namespace PasswordManager.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IVaultService _vault;
-        public AuthController(IVaultService vault) { _vault = vault; }
+        private readonly ILogger<AuthController> _log;
+        public AuthController(IVaultService vault, ILogger<AuthController> log)
+        {
+            _vault = vault;
+            _log = log;
+        }
 
         [HttpPost("init")]
         public async Task<IActionResult> Init([FromBody] InitRequest req)
         {
+            _log.LogInformation("Initializing a new vault");
             await _vault.InitializeVaultAsync(req.MasterPassword, req.vaultName);
             return Ok();
         }
@@ -21,6 +27,7 @@ namespace PasswordManager.Api.Controllers
         [HttpPost("unlock")]
         public async Task<IActionResult> Unlock([FromBody] UnlockRequest req)
         {
+            _log.LogInformation($"Unlocking Vault: {req.vaultName}");
             var token = await _vault.UnlockAsync(req.MasterPassword, req.vaultName);
             return Ok(new { SessionToken = token });
         }
@@ -28,6 +35,7 @@ namespace PasswordManager.Api.Controllers
         [HttpPost("lock")]
         public async Task<IActionResult> Lock([FromBody] LockRequest req)
         {
+            _log.LogInformation($"Locking vault");
             await _vault.LockAsync(req.SessionToken);
             return Ok();
         }
